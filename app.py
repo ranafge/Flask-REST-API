@@ -9,7 +9,6 @@ auth = HTTPBasicAuth()
 @app.route('/')
 def index():
     return 'Hello , World!'
-
 tasks = [
     {
         'id':1,
@@ -25,13 +24,10 @@ tasks = [
     }
 ]
 
-
-
 @app.route('/todo/api/v1.0/tasks', methods=['GET'])
 @auth.login_required
 def get_tasks():
     return jsonify({'tasks':tasks})
-
 
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['GET'])
 def get_task_with_id(task_id):
@@ -39,7 +35,6 @@ def get_task_with_id(task_id):
     if len(task) == 0:
         abort(404)
     return jsonify({'task': task[0]})
-
 
 @app.errorhandler(404)
 def not_found(error):
@@ -57,7 +52,6 @@ def create_task():
     }
     tasks.append(task)
     return jsonify({'tasks': tasks}), 201
-
 
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['PUT'])
 def update_task(task_id):
@@ -77,7 +71,6 @@ def update_task(task_id):
     task[0]['done'] = request.json.get('done', task[0]['done'])
     return jsonify({'task': task[0]})
 
-
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
     task = [task for task in tasks if task['id'] == task_id]
@@ -96,7 +89,6 @@ def make_public_task(task):
             new_task[field] = task[field]
     return new_task
 
-
 @auth.get_password
 def get_password(username):
     if username == 'miguel':
@@ -106,21 +98,6 @@ def get_password(username):
 @auth.error_handler
 def unauthorized():
     return make_response(jsonify({'error': 'Unathorized access'}), 401)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
